@@ -31,23 +31,11 @@ Credenciales de Acceso
 |---|---|
 | BTSJCH | BUAP |
 | GRUPO | admin2025 |
-Diagrama UML - Flujo de Autenticación
-Este diagrama de actividad muestra la lógica de validación de credenciales y el manejo de los 3 intentos fallidos antes del bloqueo.
-graph TD
-    A[INICIO] --> B{Usuario envía formulario};
-    B --> C{Obtener y limpiar credenciales};
-    C --> D{¿Credenciales correctas?};
-    
-    D -- Sí --> E[Mostrar éxito: Redirigiendo...];
-    E --> F[Redirigir a home.html];
-    F --> Z(FIN - Éxito);
-    
-    D -- No --> G[Restar 1 intento];
-    G --> H{¿Intentos > 0?};
-    
-    H -- Sí --> I[Mostrar error. Intentos restantes];
-    I --> B;
-    
-    H -- No --> J[Mostrar bloqueo y Deshabilitar formulario];
-    J --> Z(FIN - Bloqueado);
 
+
+
+Diagrama UML
+- Flujo de Autenticación
+Este diagrama de actividad muestra la lógica de validación de credenciales y el manejo de los 3 intentos fallidos antes del bloqueo.
+
+<img width="1080" height="1687" alt="Image" src="https://github.com/user-attachments/assets/f0a25e53-d90a-4a6a-a33d-1b8836109e23" />
