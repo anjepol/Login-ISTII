@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Glassmorphism</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* INICIO: Estilos Glassmorphism */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #1a1a2e;
+            font-family: 'Inter', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+            position: relative;
+            padding: 20px;
+        }
+
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            z-index: 1;
+            filter: blur(150px);
+        }
+
+        .blob-1 {
+            width: 400px;
+            height: 400px;
+            background: linear-gradient(180deg, rgba(255, 235, 59, 0.7), rgba(255, 152, 0, 0.7));
+            top: -100px;
+            left: -100px;
+        }
+
+        .blob-2 {
+            width: 500px;
+            height: 500px;
+            background: linear-gradient(180deg, rgba(233, 30, 99, 0.7), rgba(3, 169, 244, 0.7));
+            bottom: -150px;
+            right: -150px;
+            filter: blur(200px);
+        }
+
+        .glass-container {
+            position: relative;
+            z-index: 10;
+            width: 100%;
+            max-width: 420px;
+            padding: 40px 30px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+            border-radius: 24px;
+        }
+
+        .title {
+            color: #FFFFFF;
+            text-align: center;
+            font-size: 2.25rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            opacity: 1;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 14px 16px;
+            font-size: 1rem;
+            color: #FFFFFF;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .input-group input::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .input-group input:focus {
+            border-color: rgba(255, 255, 255, 0.7);
+            box-shadow: 0 0 15px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .login-button {
+            width: 100%;
+            padding: 15px;
+            background: #FFFFFF;
+            color: #1a1a2e; 
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .login-button:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px 0 rgba(0, 0, 0, 0.1);
+        }
+
+        .login-button:disabled {
+            background: #cccccc;
+            color: #888888;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        #message {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            min-height: 1.2em; 
+        }
+
+        #message.error {
+            color: #ff6b6b;
+        }
+        
+        #message.success {
+            color: #6bff9d;
+        }
+        /* FIN: Estilos */
+    </style>
+</head>
+<body>
+
+    <!-- I. Fondo -->
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+
+    <!-- II. Tarjeta de Vidrio -->
+    <div class="glass-container">
+        
+        <!-- III. Contenido -->
+        <h2 class="title">Inicio de Sesión</h2>
+        
+        <form id="loginForm">
+            <div class="input-group">
+                <label for="username">Usuario</label>
+                <input type="text" id="username" placeholder="Escribe tu usuario" required>
+            </div>
+            
+            <div class="input-group">
+                <label for="password">Contraseña</label>
+                <input type="password" id="password" placeholder="Escribe tu contraseña" required>
+            </div>
+            
+            <button type="submit" class="login-button" id="submitButton">
+                Acceder
+            </button>
+        </form>
+        
+        <p id="message"></p>
+        
+    </div>
+
+    <script>
+        // INICIO: Pseudocódigo y Lógica de Script
+
+        // 1. ESPERAR a que toda la página (DOM) se haya cargado.
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // 2. DEFINIR constantes y variables de estado.
+            
+            // 2.1. Almacenar usuarios y contraseñas en un objeto.
+            const allowedUsers = {
+                'BTSJCH': 'BUAP',
+                'GRUPO': 'admin2025'
+            };
+            
+            // 2.2. Variable para contar los intentos restantes.
+            let attempts = 3;
+            
+            // 2.3. Página de destino al tener éxito.
+            const SUCCESS_REDIRECT_URL = 'home.html'; 
+
+            // 3. CAPTURAR elementos del DOM.
+            const loginForm = document.getElementById('loginForm');
+            const usernameInput = document.getElementById('username');
+            const passwordInput = document.getElementById('password');
+            const submitButton = document.getElementById('submitButton');
+            const messageElement = document.getElementById('message');
+
+            // 4. ASIGNAR un 'escuchador' (event listener) al formulario.
+            loginForm.addEventListener('submit', (event) => {
+                
+                // 4.1. PREVENIR el envío tradicional.
+                event.preventDefault(); 
+                
+                // 4.2. OBTENER los valores actuales Y eliminar espacios en blanco (trim) para asegurar el login.
+                const username = usernameInput.value.trim();
+                const password = passwordInput.value.trim();
+
+                // 5. INICIAR lógica de validación.
+                
+                // 5.1. VERIFICAR si el usuario existe Y la contraseña coincide.
+                if (allowedUsers[username] && allowedUsers[username] === password) {
+                    
+                    // 5.1.1. CASO ÉXITO:
+                    messageElement.textContent = '¡Acceso concedido! Redirigiendo...';
+                    messageElement.className = 'success';
+                    disableForm();
+                    
+                    // ESPERAR 2 segundos y REDIRIGIR.
+                    setTimeout(() => {
+                        // LA REDIRECCIÓN es correcta si home.html está en el mismo directorio.
+                        window.location.href = SUCCESS_REDIRECT_URL;
+                    }, 2000);
+
+                } else {
+                    // 5.1.2. CASO FALhtmlLO:
+                    attempts--;
+                    
+                    // 5.1.3. COMPROBAR si quedan intentos.
+                    if (attempts > 0) {
+                        // AÚN QUEDAN INTENTOS:
+                        messageElement.textContent = `Datos incorrectos. Quedan ${attempts} intento(s).`;
+                        messageElement.className = 'error';
+                        // Limpiar solo la contraseña.
+                        passwordInput.value = '';
+                        passwordInput.focus();
+                    } else {
+                        // NO QUEDAN INTENTOS:
+                        messageElement.textContent = 'Acceso bloqueado. Demasiados intentos fallidos.';
+                        messageElement.className = 'error';
+                        disableForm();
+                    }
+                }
+            });
+
+            // 6. DEFINIR funciones auxiliares.
+            
+            // 6.1. Función para deshabilitar los campos.
+            function disableForm() {
+                usernameInput.disabled = true;
+                passwordInput.disabled = true;
+                submitButton.disabled = true;
+            }
+            
+            // FIN: Script
+        });
+    </script>
+
+</body>
+</html>
+
