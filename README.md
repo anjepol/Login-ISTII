@@ -31,23 +31,23 @@ Credenciales de Acceso
 |---|---|
 | BTSJCH | BUAP |
 | GRUPO | admin2025 |
-Diseño inspirado en el concepto de Glassmorphism.
-
-
-
-
-Diagrama UML
-
+Diagrama UML - Flujo de Autenticación
+Este diagrama de actividad muestra la lógica de validación de credenciales y el manejo de los 3 intentos fallidos antes del bloqueo.
 graph TD
-    A(Inicio) --> B[Usuario abre login.html];
-    B --> C{Usuario envía formulario};
+    A[INICIO] --> B{Usuario envía formulario};
+    B --> C{Obtener y limpiar credenciales};
     C --> D{¿Credenciales correctas?};
-    D -- Sí --> E[Mostrar éxito y redirigir a home.html];
-    E --> Z(Fin);
-    D -- No --> F[Restar 1 intento];
-    F --> G{¿Intentos > 0?};
-    G -- Sí --> H[Mostrar error];
-    H --> C;
-    G -- No --> I[Mostrar bloqueo y deshabilitar formulario];
-    I --> Z;
     
+    D -- Sí --> E[Mostrar éxito: Redirigiendo...];
+    E --> F[Redirigir a home.html];
+    F --> Z(FIN - Éxito);
+    
+    D -- No --> G[Restar 1 intento];
+    G --> H{¿Intentos > 0?};
+    
+    H -- Sí --> I[Mostrar error. Intentos restantes];
+    I --> B;
+    
+    H -- No --> J[Mostrar bloqueo y Deshabilitar formulario];
+    J --> Z(FIN - Bloqueado);
+
